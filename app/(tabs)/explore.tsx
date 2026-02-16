@@ -1,112 +1,256 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import * as Haptics from "expo-haptics";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { api } from "../../services/api";
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
 
-export default function TabTwoScreen() {
+export default function CrackDetection() {
+  const [image, setImage] = useState<string | null>(null);
+  const [result, setResult] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [showPatch, setShowPatch] = useState(false);
+
+    // -------------------------
+  // Simulated notification handler
+  // -------------------------
+  const triggerNotification = (warning: any) => {
+    if (!warning) return;
+
+    if (warning.level === "WARNING") {
+      Alert.alert(
+        "⚠️ Maintenance Warning",
+        warning.message
+      );
+    }
+
+    if (warning.level === "CRITICAL") {
+      Alert.alert(
+        "🚨 CRITICAL ALERT",
+        warning.message
+      );
+      Haptics.notificationAsync(
+        Haptics.NotificationFeedbackType.Error
+      );
+    }
+  };
+
+
+  // -------------------------
+  // Pick image
+  // -------------------------
+  const pickImage = async () => {
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+    if (!res.canceled) {
+      setImage(res.assets[0].uri);
+      setResult(null);
+      setShowPatch(false);
+    }
+  };
+
+  // -------------------------
+  // Analyze crack
+  // -------------------------
+  const analyze = async () => {
+    if (!image) {
+      alert("Please select an image first");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const data = new FormData();
+      data.append("image", {
+        uri: image,
+        name: "wall.jpg",
+        type: "image/jpeg",
+      } as any);
+
+      const res = await api.post("/crack-detect", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      console.log("BACKEND RESPONSE:", res.data);
+      setResult(res.data);
+      triggerNotification(res.data.warning);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to analyze crack. Check backend connection.");
+    }
+
+    setLoading(false);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>🧱 Crack Detection</Text>
+
+      <Button title="Select Wall Image" onPress={pickImage} />
+
+      {image && (
+        <>
+          <Image source={{ uri: image }} style={styles.image} />
+          <Button title="Analyze Crack" onPress={analyze} />
+        </>
+      )}
+
+      {loading && (
+        <ActivityIndicator size="large" style={{ marginTop: 20 }} />
+      )}
+{result && result.combined_warning && (
+  <View
+    style={[
+      styles.warningBox,
+      result.combined_warning.level === "CRITICAL"
+        ? styles.critical
+        : result.combined_warning.level === "WARNING"
+        ? styles.warning
+        : styles.safe,
+    ]}
+  >
+    <Text style={styles.warningLevel}>
+      OVERALL HOME STATUS: {result.combined_warning.level}
+    </Text>
+    <Text>{result.combined_warning.message}</Text>
+  </View>
+)}
+
+
+      {/* ================= RESULT SECTION ================= */}
+      {result && (
+        <View style={styles.card}>
+        
+          <Text style={styles.cardTitle}>Analysis Result</Text>
+          <Text>Condition: {result.label}</Text>
+          <Text>Severity: {result.severity_text}</Text>
+          <Text>
+            Crack Area: {Number(result.area_perc ?? 0).toFixed(2)}%
+          </Text>
+
+          {/* 💰 REPAIR COST */}
+          <Text style={styles.cost}>
+            Estimated Repair Cost: ₹
+            {Number(result.repair_cost ?? 0).toFixed(2)}
+          </Text>
+
+          {/* 🧩 AR PATCH TOGGLE */}
+          {result.patched_image && (
+            <Button
+              title={
+                showPatch
+                  ? "Show Original Image"
+                  : "Show AR Patch Preview"
+              }
+              onPress={() => setShowPatch(!showPatch)}
+            />
+          )}
+
+          {/* 🖼 IMAGE VIEW */}
+          <Image
+            source={{
+              uri:
+                showPatch && result.patched_image
+                  ? `data:image/jpeg;base64,${result.patched_image}`
+                  : image!,
+            }}
+            style={styles.image}
+          />
+
+          {/* 🔴 HIGHLIGHTED CRACKS */}
+          {result.highlighted_image && (
+            <>
+              <Text style={styles.subTitle}>
+                Highlighted Crack Areas
+              </Text>
+              <Image
+                source={{
+                  uri: `data:image/jpeg;base64,${result.highlighted_image}`,
+                }}
+                style={styles.image}
+              />
+            </>
+          )}
+        </View>
+      )}
+    </ScrollView>
   );
 }
 
+// -------------------------
+// Styles
+// -------------------------
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    padding: 20,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+  image: {
+    height: 220,
+    marginTop: 15,
+    borderRadius: 10,
+  },
+  card: {
+    marginTop: 20,
+    backgroundColor: "#F1F5F9",
+    padding: 15,
+    borderRadius: 12,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  subTitle: {
+    marginTop: 15,
+    fontWeight: "bold",
+  },
+  cost: {
+    marginTop: 10,
+    fontWeight: "bold",
+    color: "#B91C1C",
+  },
+
+  // 🚨 Warning styles
+  warningBox: {
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  critical: {
+    backgroundColor: "#FEE2E2",
+    borderLeftWidth: 5,
+    borderLeftColor: "#DC2626",
+  },
+  warning: {
+    backgroundColor: "#FEF3C7",
+    borderLeftWidth: 5,
+    borderLeftColor: "#D97706",
+  },
+  safe: {
+    backgroundColor: "#DCFCE7",
+    borderLeftWidth: 5,
+    borderLeftColor: "#16A34A",
+  },
+  warningLevel: {
+    fontWeight: "bold",
+    marginBottom: 4,
   },
 });
