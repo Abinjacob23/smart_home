@@ -44,43 +44,45 @@ A full-stack **Smart Home Surveillance System** that monitors **wall cracks, gas
 ESP32 / Sensors (Simulated)->Flask Backend (Python)->SQLite Database->React Native App (Expo)
 
 ### Backend Setup
-cd backend
-python -m venv venv
-venv\Scripts\activate   # Windows
-pip install -r requirements.txt
-python app.py
+- cd backend
+- python -m venv venv
+- venv\Scripts\activate   # Windows
+- pip install -r requirements.txt
+- python app.py
 
 
 ### Frontend Setup (React Native)
-npm install
-npx expo start -c
-📱 Open Expo Go on your phone and scan the QR code.
-⚠️ Ensure your phone and PC are on the same Wi-Fi network.
+- npm install
+- npx expo start -c
+- 📱 Open Expo Go on your phone and scan the QR code.
+- ⚠️ Ensure your phone and PC are on the same Wi-Fi network.
 
 ### Configure API Base URL
-services/api.ts->export const api = axios.create({
+- services/api.ts->export const
+- api = axios.create({
   baseURL: "http://<YOUR_LOCAL_IP>:5000",
 });
 paste your ip address
 
 ### AI Model
 _____________________________________
-Model: crack_classifier_model_v2.keras
-Framework: TensorFlow / Keras
-Input: Wall surface image
-Output: Crack probability
-Final condition determined using severity fusion logic
+- Model: crack_classifier_model_v2.keras
+- Framework: TensorFlow / Keras
+- Input: Wall surface image
+- Output: Crack probability
+- Final condition determined using severity fusion logic
 
 ### Database
 ____________________________________
-SQLite (crack_records.db)
-Automatically created on backend startup
-Stores:
-Timestamp
-Wall condition
-Severity score
-Repair cost
-Warning level
+- SQLite (crack_records.db)
+- Automatically created on backend startup
+- Stores:
+-----------------------------------------
+- Timestamp
+- Wall condition
+- Severity score
+- Repair cost
+- Warning level
 
 ### To Do
 ____________________
