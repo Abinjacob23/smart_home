@@ -1,50 +1,132 @@
-# Welcome to your Expo app 👋
+# 🏠 Smart Home Surveillance System
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A full-stack **Smart Home Surveillance System** that monitors **wall cracks, gas leakage, and electrical leakage**, using **AI-based crack detection**, **sensor simulation**, and a **React Native mobile app** for real-time monitoring, alerts, and analytics.
 
-## Get started
+---
 
-1. Install dependencies
+## 📌 Features
 
-   ```bash
-   npm install
-   ```
+### 🧱 Crack Detection (AI + Image Processing)
+- Crack detection using a **trained Keras CNN model**
+- Crack area and severity estimation using **OpenCV**
+- Wall condition classification (Good / Degraded)
+- **AR-style crack patch visualization**
+- Repair cost estimation based on severity
+- Crack analysis history storage
 
-2. Start the app
+### 🔥 Gas Safety Module
+- Simulated LPG gas leakage detection
+- Safety levels: SAFE / WARNING / CRITICAL
+- Dedicated Gas Safety screen in the app
 
-   ```bash
-   npx expo start
-   ```
+### ⚡ Electrical Safety Module
+- Simulated current leakage detection
+- Safety levels: SAFE / WARNING / CRITICAL
+- Dedicated Electrical Safety screen
 
-In the output, you'll find options to open the app in a
+### ⚠️ Alerts & Warnings
+- Combined alerts (Crack + Gas + Electricity)
+- Warning history with timestamps
+- Severity-based alert levels
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 📊 Dashboard Analytics
+- Total crack inspections
+- Critical and warning alerts count
+- Total estimated repair cost
+- Overall home safety overview
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🏗️ System Architecture
 
-When you're ready, run:
+# 🏠 Smart Home Surveillance System
 
-```bash
-npm run reset-project
-```
+A full-stack **Smart Home Surveillance System** that monitors **wall cracks, gas leakage, and electrical leakage**, using **AI-based crack detection**, **sensor simulation**, and a **React Native mobile app** for real-time monitoring, alerts, and analytics.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 📌 Features
 
-To learn more about developing your project with Expo, look at the following resources:
+### 🧱 Crack Detection (AI + Image Processing)
+- Crack detection using a **trained Keras CNN model**
+- Crack area and severity estimation using **OpenCV**
+- Wall condition classification (Good / Degraded)
+- **AR-style crack patch visualization**
+- Repair cost estimation based on severity
+- Crack analysis history storage
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 🔥 Gas Safety Module
+- Simulated LPG gas leakage detection
+- Safety levels: SAFE / WARNING / CRITICAL
+- Dedicated Gas Safety screen in the app
 
-## Join the community
+### ⚡ Electrical Safety Module
+- Simulated current leakage detection
+- Safety levels: SAFE / WARNING / CRITICAL
+- Dedicated Electrical Safety screen
 
-Join our community of developers creating universal apps.
+### ⚠️ Alerts & Warnings
+- Combined alerts (Crack + Gas + Electricity)
+- Warning history with timestamps
+- Severity-based alert levels
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 📊 Dashboard Analytics
+- Total crack inspections
+- Critical and warning alerts count
+- Total estimated repair cost
+- Overall home safety overview
+
+---
+
+## 🏗️ System Architecture
+
+ESP32 / Sensors (Simulated)
+↓
+Flask Backend (Python)
+↓
+SQLite Database
+↓
+React Native App (Expo)
+
+###Backend Setup
+cd backend
+python -m venv venv
+venv\Scripts\activate   # Windows
+pip install -r requirements.txt
+python app.py
+
+
+###Frontend Setup (React Native)
+npm install
+npx expo start -c
+📱 Open Expo Go on your phone and scan the QR code.
+⚠️ Ensure your phone and PC are on the same Wi-Fi network.
+
+###Configure API Base URL
+services/api.ts->export const api = axios.create({
+  baseURL: "http://<YOUR_LOCAL_IP>:5000",
+});
+paste your ip address
+
+AI Model
+_____________________________________
+Model: crack_classifier_model_v2.keras
+Framework: TensorFlow / Keras
+Input: Wall surface image
+Output: Crack probability
+Final condition determined using severity fusion logic
+
+Database
+____________________________________
+SQLite (crack_records.db)
+Automatically created on backend startup
+Stores:
+Timestamp
+Wall condition
+Severity score
+Repair cost
+Warning level
+
+To Do
+____________________
+Sensor fusion from an ESP32 module
