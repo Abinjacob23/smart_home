@@ -41,13 +41,7 @@ A full-stack **Smart Home Surveillance System** that monitors **wall cracks, gas
 
 ## 🏗️ System Architecture
 
-ESP32 / Sensors (Simulated)
-↓
-Flask Backend (Python)
-↓
-SQLite Database
-↓
-React Native App (Expo)
+ESP32 / Sensors (Simulated)->Flask Backend (Python)->SQLite Database->React Native App (Expo)
 
 ### Backend Setup
 cd backend
