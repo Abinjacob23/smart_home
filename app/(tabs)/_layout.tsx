@@ -1,5 +1,5 @@
-import { Tabs } from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
   return (
@@ -17,7 +17,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Crack",
+          title: "Crack Detection",
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="construction" size={size} color={color} />
           ),
@@ -37,19 +37,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="electricity"
         options={{
-          title: "Electric",
+          title: "Electricity",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="flash" size={size} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="warnings"
-        options={{
-          title: "Warnings",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="warning" size={size} color={color} />
           ),
         }}
       />

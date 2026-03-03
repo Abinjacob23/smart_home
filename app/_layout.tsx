@@ -14,14 +14,17 @@ export default function RootLayout() {
         options={{ title: "Home" }}
       />
       <Drawer.Screen
-        name="notification"
-        options={{ title: "Notifications" }}
-      />
-      <Drawer.Screen
       name="crack-history"
       options={{ title: "Crack History" }}
       />
-
+      <Drawer.Screen
+      name="gas-history"
+      options={{ title: "Gas History" }}
+      />
+      <Drawer.Screen
+      name="electricity-history"
+      options={{ title: "Electricity History" }}
+      />
     </Drawer>
   );
 }
