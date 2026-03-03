@@ -1,50 +1,89 @@
-# Welcome to your Expo app 👋
+## 🏗️ System Architecture
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# 🏠 Smart Home Surveillance System
 
-## Get started
+A full-stack **Smart Home Surveillance System** that monitors **wall cracks, gas leakage, and electrical leakage**, using **AI-based crack detection**, **sensor simulation**, and a **React Native mobile app** for real-time monitoring, alerts, and analytics.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 📌 Features
 
-2. Start the app
+### 🧱 Crack Detection (AI + Image Processing)
+- Crack detection using a **trained Keras CNN model**
+- Crack area and severity estimation using **OpenCV**
+- Wall condition classification (Good / Degraded)
+- **AR-style crack patch visualization**
+- Repair cost estimation based on severity
+- Crack analysis history storage
 
-   ```bash
-   npx expo start
-   ```
+### 🔥 Gas Safety Module
+- Simulated LPG gas leakage detection
+- Safety levels: SAFE / WARNING / CRITICAL
+- Dedicated Gas Safety screen in the app
 
-In the output, you'll find options to open the app in a
+### ⚡ Electrical Safety Module
+- Simulated current leakage detection
+- Safety levels: SAFE / WARNING / CRITICAL
+- Dedicated Electrical Safety screen
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### ⚠️ Alerts & Warnings
+- Combined alerts (Crack + Gas + Electricity)
+- Warning history with timestamps
+- Severity-based alert levels
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 📊 Dashboard Analytics
+- Total crack inspections
+- Critical and warning alerts count
+- Total estimated repair cost
+- Overall home safety overview
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 🏗️ System Architecture
 
-```bash
-npm run reset-project
-```
+ESP32 / Sensors (Simulated)->Flask Backend (Python)->SQLite Database->React Native App (Expo)
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Backend Setup
+- cd backend
+- python -m venv venv
+- venv\Scripts\activate   # Windows
+- pip install -r requirements.txt
+- python app.py
 
-## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
+### Frontend Setup (React Native)
+- npm install
+- npx expo start -c
+- 📱 Open Expo Go on your phone and scan the QR code.
+- ⚠️ Ensure your phone and PC are on the same Wi-Fi network.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Configure API Base URL
+- services/api.ts->export const
+- api = axios.create({
+  baseURL: "http://<YOUR_LOCAL_IP>:5000",
+});
+paste your ip address
 
-## Join the community
+### AI Model
+_____________________________________
+- Model: crack_classifier_model_v2.keras
+- Framework: TensorFlow / Keras
+- Input: Wall surface image
+- Output: Crack probability
+- Final condition determined using severity fusion logic
 
-Join our community of developers creating universal apps.
+### Database
+____________________________________
+- SQLite (crack_records.db)
+- Automatically created on backend startup
+- Stores:
+-----------------------------------------
+- Timestamp
+- Wall condition
+- Severity score
+- Repair cost
+- Warning level
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### To Do
+____________________
+Sensor fusion from an ESP32 module
