@@ -25,6 +25,16 @@ export default function RootLayout() {
       name="electricity-history"
       options={{ title: "Electricity History" }}
       />
+      <Drawer.Screen
+      name="appliances/index"
+      options={{ title: "Appliances" }}
+      />
+      <Drawer.Screen
+  name="appliances/[id]"
+  options={{
+    drawerItemStyle: { display: "none" }
+  }}
+/>
     </Drawer>
   );
 }

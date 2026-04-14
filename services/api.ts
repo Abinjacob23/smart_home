@@ -1,5 +1,10 @@
 import axios from "axios";
+import Constants from "expo-constants";
+
+const host =
+  Constants.expoConfig?.hostUri?.split(":")[0] ??
+  Constants.manifest?.debuggerHost?.split(":")[0];
 
 export const api = axios.create({
-  baseURL: "http://10.98.246.245:5000", // 🔁 Replace with YOUR IP
+  baseURL: `http://${host}:5000`,
 });
